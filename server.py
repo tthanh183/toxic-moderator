@@ -58,9 +58,9 @@ def predict_toxicity(text):
         prediction = model.predict(text_vector.toarray())
 
         if prediction >= 0.5:
-            return "Toxic Comment"
+            return "Toxic"
         else:
-            return "Non-Toxic Comment"
+            return "Non-Toxic"
 
     except Exception as e:
         return f"Error: {e}"
