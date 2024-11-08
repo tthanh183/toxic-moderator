@@ -1,0 +1,6 @@
+Flask
+numpy
+langdetect
+tensorflow
+underthesea
+scikit-learn
