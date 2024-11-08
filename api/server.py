@@ -5,17 +5,17 @@ from langdetect import detect
 from tensorflow.keras.models import load_model
 from underthesea import word_tokenize
 import re
+import os
 
 app = Flask(__name__)
 
-with open('tfidf_vectorizer.pkl', 'rb') as f:
+with open(os.path.join("..", "models", "tfidf_vectorizer.pkl"), 'rb') as f:
     english_vect = pickle.load(f)
-english_model = load_model('toxic_comment_model.h5')
+english_model = load_model(os.path.join("..", "models", "toxic_comment_model.h5"))
 
-with open('vietnamese_tfidf_vectorizer.pkl', 'rb') as f:
+with open(os.path.join("..", "models", "vietnamese_tfidf_vectorizer.pkl"), 'rb') as f:
     vietnamese_vect = pickle.load(f)
-vietnamese_model = load_model('vietnamese_tfidf_vectorizer.h5')
-
+vietnamese_model = load_model(os.path.join("..", "models", "vietnamese_tfidf_vectorizer.pkl"))
 
 def clean_text_english(text):
     text = text.lower()
@@ -46,11 +46,11 @@ def predict_toxicity(text):
         lang = detect(text)
         print(f"Detected language: {lang}")
 
-        if lang == 'vi':  # Vietnamese
+        if lang == 'vi':  
             cleaned_text = clean_text_vietnamese(text)
             text_vector = vietnamese_vect.transform([cleaned_text])
             model = vietnamese_model
-        else:  # English or fallback to English
+        else:  
             cleaned_text = clean_text_english(text)
             text_vector = english_vect.transform([cleaned_text])
             model = english_model
