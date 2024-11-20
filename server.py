@@ -19,7 +19,7 @@ english_model = load_model(os.path.join(model_dir, "toxic_comment_model.h5"))
 with open(os.path.join(model_dir, "vietnamese_tfidf_vectorizer.pkl"), 'rb') as f:
     vietnamese_vect = pickle.load(f)
 
-vietnamese_model = load_model(os.path.join(model_dir, "toxic_comment_model.h5")) 
+vietnamese_model = load_model(os.path.join(model_dir, "vietnamese_tfidf_vectorizer.h5")) 
 
 def clean_text_english(text):
     text = text.lower()
@@ -81,4 +81,5 @@ def predict():
     return jsonify({"prediction": result})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
+
