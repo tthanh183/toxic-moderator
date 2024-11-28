@@ -10,7 +10,7 @@ import os
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5500", "https://toxic-moderator.onrender.com"]}})
+CORS(app)
 
 model_dir = os.path.join(os.getcwd(), "models")
 
@@ -50,14 +50,14 @@ def clean_text_vietnamese(text):
 
 def predict_toxicity(text):
     try:
-        lang = detect(text)
+        lang = detect(text)  
         print(f"Detected language: {lang}")
 
-        if lang == 'vi':  
+        if lang == 'vi': 
             cleaned_text = clean_text_vietnamese(text)
             text_vector = vietnamese_vect.transform([cleaned_text])
             model = vietnamese_model
-        else: 
+        else:  
             cleaned_text = clean_text_english(text)
             text_vector = english_vect.transform([cleaned_text])
             model = english_model
@@ -72,24 +72,14 @@ def predict_toxicity(text):
     except Exception as e:
         return f"Error: {e}"
 
-# Route Flask
-@app.route('/predict', methods=['POST', 'OPTIONS'])
+@app.route('/predict', methods=['POST'])
 def predict():
-    if request.method == 'OPTIONS':
-        response = jsonify({"message": "Preflight request passed"})
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        return response
-
     data = request.get_json(force=True)
     text = data.get('text')
 
-    if not text:
-        return jsonify({"error": "No text provided"}), 400
+    prediction = predict_toxicity(text)
 
-    result = predict_toxicity(text)
-    return jsonify({"prediction": result})
+    return jsonify({"prediction": prediction})
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5000)
