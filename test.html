@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Test</title>
+</head>
+<body>
+    <h1>Test CORS</h1>
+    <button id="testButton">Send Request</button>
+    <p id="result"></p>
+
+    <script>
+        document.getElementById('testButton').addEventListener('click', () => {
+            fetch('https://toxic-moderator.onrender.com/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: "This is a test text" })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').textContent = `Response: ${JSON.stringify(data)}`;
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = `Error: ${error}`;
+            });
+        });
+    </script>
+</body>
+</html>

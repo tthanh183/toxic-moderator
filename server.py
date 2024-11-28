@@ -83,5 +83,5 @@ def predict():
 
 if __name__ == '__main__':
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5500"]}})
     app.run(debug=False, host='0.0.0.0', port=5000)
