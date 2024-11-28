@@ -24,7 +24,6 @@ with open(os.path.join(model_dir, "vietnamese_tfidf_vectorizer.pkl"), 'rb') as f
 
 vietnamese_model = load_model(os.path.join(model_dir, "vietnamese_tfidf_vectorizer.h5"))
 
-# Text cleaning functions
 def clean_text_english(text):
     text = text.lower()
     text = re.sub(r"what's", "what is ", text)
@@ -49,7 +48,6 @@ def clean_text_vietnamese(text):
     text = ' '.join(text)
     return text
 
-# Predict function
 def predict_toxicity(text):
     try:
         lang = detect(text)
@@ -74,12 +72,15 @@ def predict_toxicity(text):
     except Exception as e:
         return f"Error: {e}"
 
-# Flask route
+# Route Flask
 @app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():
     if request.method == 'OPTIONS':
-        # Handle preflight request
-        return jsonify({"message": "Preflight request passed"}), 200
+        response = jsonify({"message": "Preflight request passed"})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        return response
 
     data = request.get_json(force=True)
     text = data.get('text')
