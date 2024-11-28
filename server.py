@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import numpy as np
 import pickle
 from langdetect import detect
@@ -6,16 +7,14 @@ from tensorflow.keras.models import load_model
 from underthesea import word_tokenize
 import re
 import os
-from flask_cors import CORS
 
 app = Flask(__name__)
 
-# Configure CORS to allow specific origins
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5500"]}})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5500", "https://toxic-moderator.onrender.com"]},
+                     "methods": ["GET", "POST", "OPTIONS"]})
 
 model_dir = os.path.join(os.getcwd(), "models")
 
-# Load models and vectorizers
 with open(os.path.join(model_dir, "tfidf_vectorizer.pkl"), 'rb') as f:
     english_vect = pickle.load(f)
 
