@@ -10,8 +10,12 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
+# Configure CORS to allow specific origins
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5500"]}})
+
 model_dir = os.path.join(os.getcwd(), "models")
 
+# Load models and vectorizers
 with open(os.path.join(model_dir, "tfidf_vectorizer.pkl"), 'rb') as f:
     english_vect = pickle.load(f)
 
@@ -20,8 +24,9 @@ english_model = load_model(os.path.join(model_dir, "toxic_comment_model.h5"))
 with open(os.path.join(model_dir, "vietnamese_tfidf_vectorizer.pkl"), 'rb') as f:
     vietnamese_vect = pickle.load(f)
 
-vietnamese_model = load_model(os.path.join(model_dir, "vietnamese_tfidf_vectorizer.h5")) 
+vietnamese_model = load_model(os.path.join(model_dir, "vietnamese_tfidf_vectorizer.h5"))
 
+# Text cleaning functions
 def clean_text_english(text):
     text = text.lower()
     text = re.sub(r"what's", "what is ", text)
@@ -42,10 +47,11 @@ def clean_text_vietnamese(text):
     text = text.lower()
     text = re.sub('\W', ' ', text)
     text = re.sub('\s+', ' ', text)
-    text = word_tokenize(text) 
+    text = word_tokenize(text)
     text = ' '.join(text)
     return text
 
+# Predict function
 def predict_toxicity(text):
     try:
         lang = detect(text)
@@ -70,8 +76,13 @@ def predict_toxicity(text):
     except Exception as e:
         return f"Error: {e}"
 
-@app.route('/predict', methods=['POST'])
+# Flask route
+@app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():
+    if request.method == 'OPTIONS':
+        # Handle preflight request
+        return jsonify({"message": "Preflight request passed"}), 200
+
     data = request.get_json(force=True)
     text = data.get('text')
 
@@ -82,6 +93,4 @@ def predict():
     return jsonify({"prediction": result})
 
 if __name__ == '__main__':
-    app = Flask(__name__)
-    CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5500"]}})
     app.run(debug=False, host='0.0.0.0', port=5000)
