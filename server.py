@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import numpy as np
 import pickle
 from langdetect import detect
@@ -9,8 +9,6 @@ import re
 import os
 
 app = Flask(__name__)
-
-CORS(app)
 
 model_dir = os.path.join(os.getcwd(), "models")
 
@@ -73,6 +71,7 @@ def predict_toxicity(text):
         return f"Error: {e}"
 
 @app.route('/predict', methods=['POST'])
+@cross_origin()
 def predict():
     data = request.get_json(force=True)
     text = data.get('text')
