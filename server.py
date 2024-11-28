@@ -10,8 +10,7 @@ import os
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5500", "https://toxic-moderator.onrender.com"]},
-                     "methods": ["GET", "POST", "OPTIONS"]})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5500", "https://toxic-moderator.onrender.com"]}})
 
 model_dir = os.path.join(os.getcwd(), "models")
 
