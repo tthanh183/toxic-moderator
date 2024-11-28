@@ -6,6 +6,7 @@ from tensorflow.keras.models import load_model
 from underthesea import word_tokenize
 import re
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
 
@@ -81,4 +82,6 @@ def predict():
     return jsonify({"prediction": result})
 
 if __name__ == '__main__':
+    app = Flask(__name__)
+    CORS(app)
     app.run(debug=False, host='0.0.0.0', port=5000)
