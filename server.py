@@ -22,7 +22,7 @@ english_model = load_model(os.path.join(model_dir, "toxic_comment_model.h5"))
 with open(os.path.join(model_dir, "vietnamese_tfidf_vectorizer.pkl"), 'rb') as f:
     vietnamese_vect = pickle.load(f)
 
-vietnamese_model = load_model(os.path.join(model_dir, "vietnamese_tfidf_vectorizer.h5"))
+vietnamese_model = load_model(os.path.join(model_dir, "vietnamese_toxic_comment_model.h5"))
 
 def clean_text_english(text):
     text = text.lower()
