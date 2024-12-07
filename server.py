@@ -82,5 +82,12 @@ def predict():
 
     return jsonify({"prediction": prediction})
 
+@app.route('/predict', methods=['OPTIONS'])
+@cross_origin() 
+def options():
+    response = jsonify({})
+    response.status_code = 200
+    return response
+
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5000)
